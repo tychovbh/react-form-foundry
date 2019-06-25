@@ -1,7 +1,7 @@
 {
   "name": "react-form-generator",
   "version": "1.0.0",
-  "description": "React Form Generator",
+  "description": "Generate forms from JSON in React",
   "author": "tychovbh",
   "license": "MIT",
   "repository": "tychovbh/react-form-generator",
