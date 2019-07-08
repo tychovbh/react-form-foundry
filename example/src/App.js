@@ -1,24 +1,24 @@
-import React, {Component} from 'react'
+import React, {useState, useEffect} from 'react'
 
 import Form from 'react-form-generator'
-import styled from 'styled-components'
 
-const Title = styled.h1`
-  font-size: 1.5em;
-  text-align: center;
-  color: palevioletred;
-`
+export default () => {
+    const [form, setForm] = useState({})
 
-export default class App extends Component {
-    render() {
-        return (
-            <div>
-              <Form
-                    components={{
-                        title: Title
-                    }}
-                    text='Modern React component module'/>
-            </div>
-        )
-    }
+    useEffect(() => {
+        if (!form.name) {
+            fetch('http://local.bureausterk.api/categories/create').then((response) => {
+                return response.json()
+            }).then((json) => {
+                setForm(json.data)
+            })
+        }
+
+    });
+
+    return (
+        <div>
+            {form.name && <Form form={form}/>}
+        </div>
+    )
 }
