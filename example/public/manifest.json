@@ -1,6 +1,6 @@
 {
-  "short_name": "react-form-factory",
-  "name": "react-form-factory",
+  "short_name": "react-form-foundry",
+  "name": "react-form-foundry",
   "start_url": "./index.html",
   "display": "standalone",
   "theme_color": "#000000",

@@ -1,6 +1,6 @@
 {
-  "name": "react-form-factory-example",
-  "homepage": "https://tychovbh.github.io/react-form-factory",
+  "name": "react-form-foundry-example",
+  "homepage": "https://tychovbh.github.io/react-form-foundry",
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
@@ -9,7 +9,7 @@
     "babel-plugin-styled-components": "^1.10.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-form-factory": "link:..",
+    "react-form-foundry": "link:..",
     "react-scripts": "^3.0.1",
     "styled-components": "^4.3.2"
   },

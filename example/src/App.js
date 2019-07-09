@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
-import Form from 'react-form-factory'
+import Form from 'react-form-foundry'
 
 const Container = styled.div`
     max-width: 320px;

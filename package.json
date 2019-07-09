@@ -1,10 +1,10 @@
 {
-  "name": "react-form-factory",
+  "name": "react-form-foundry",
   "version": "1.0.0",
   "description": "Generate forms from JSON in React",
   "author": "tychovbh",
   "license": "MIT",
-  "repository": "tychovbh/react-form-factory",
+  "repository": "tychovbh/react-form-foundry",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
