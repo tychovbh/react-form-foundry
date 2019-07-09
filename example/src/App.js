@@ -93,6 +93,25 @@ export default () => {
                     name: 'description',
                     label: 'Description'
                 },
+            },
+            {
+                element: {
+                    name: 'select'
+                },
+                properties: {
+                    name: 'company',
+                    label: 'Company',
+                    options: [
+                        {
+                            value: 1,
+                            label: 'Google'
+                        },
+                        {
+                            value: 2,
+                            label: 'Microsoft'
+                        },
+                    ]
+                },
             }
         ]
     })
