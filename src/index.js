@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 const DefaultInput = (props) => <input {...props}/>
 const DefaultTextarea = (props) => <textarea {...props}/>
 const DefaultLabel = (props) => <label {...props}/>
+const DefaultTitle = (props) => <h3 {...props}>{props.children}</h3>
 
 const InputField = ({field, component, onChange, id}) => {
     const Component = component || DefaultInput
@@ -76,10 +77,11 @@ export default class Form extends Component {
         const {model, form} = this.state
         const Submit = this.component('submit') || DefaultInput
         const Label = this.component('label') || DefaultLabel
+        const Title = this.component('title') || DefaultTitle
 
         return (
           <form onSubmit={this.submit}>
-              {form.label && <h3>{form.label}</h3>}
+              {form.label && <Title>{form.label}</Title>}
               {form.description && <p>{form.description}</p>}
               {
                   form.fields.map((field, index) => {
@@ -87,10 +89,10 @@ export default class Form extends Component {
                       const id = `form-generator-field-${field.properties.name}`
 
                       return (
-                        <div className={'form-generator-field'}>
+                        <div className={'form-generator-field'} key={index}>
                             {
                                 field.properties.label &&
-                                <Label for={id} key={index}>
+                                <Label for={id}>
                                     {field.properties.label}
                                 </Label>
                             }

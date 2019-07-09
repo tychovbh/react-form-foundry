@@ -52,9 +52,16 @@ const Label = styled.label`
     display: block;
 `
 
+const Title = styled.h3`
+    text-align: center;
+    color: green;
+    text-transform: uppercase;
+`
+
 export default () => {
     const [form, setForm] = useState({
-        name: 'Cateogories',
+        name: 'cateogories',
+        label: 'Categories',
         fields: [
             {
                 element: {
@@ -110,7 +117,8 @@ export default () => {
                     input: Input,
                     submit: Submit,
                     label: Label,
-                    textarea: Textarea
+                    textarea: Textarea,
+                    title: Title
                 }}
                 form={form}
               />
