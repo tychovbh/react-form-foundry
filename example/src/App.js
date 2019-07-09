@@ -154,17 +154,6 @@ export default () => {
         ]
     })
 
-    useEffect(() => {
-        if (!form.name) {
-            fetch('http://local.bureausterk.api/categories/create').then((response) => {
-                return response.json()
-            }).then((json) => {
-                setForm(json.data)
-            })
-        }
-
-    })
-
     return (
       <Container>
           {

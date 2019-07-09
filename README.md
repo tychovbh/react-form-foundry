@@ -13,17 +13,7 @@ npm install --save react-form-foundry
 ## Usage
 
 ```jsx
-import React, { Component } from 'react'
-
-import MyComponent from 'react-form-foundry'
-
-class Example extends Component {
-  render () {
-    return (
-      <MyComponent />
-    )
-  }
-}
+see example/src/App.js
 ```
 
 ## License
