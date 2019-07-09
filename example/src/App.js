@@ -9,13 +9,19 @@ const Title = styled.h1`
   color: palevioletred;
 `
 
+const Input = styled.input`
+  border-color: green;
+  border-radius: 5px;
+`
+
 export default class App extends Component {
     render() {
         return (
             <div>
               <Form
                     components={{
-                        title: Title
+                        title: Title,
+                        input: Input
                     }}
                     text='Modern React component module'/>
             </div>
