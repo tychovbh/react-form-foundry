@@ -89,7 +89,7 @@ export default () => {
     const [form, setForm] = useState({
         name: 'cateogories',
         label: 'Categories',
-        description: 'This is a very nice description',
+        description: 'This is a very accurate description',
         fields: [
             {
                 element: {
@@ -140,7 +140,17 @@ export default () => {
                         },
                     ]
                 },
-            }
+            },
+            {
+                element: {
+                    name: 'input'
+                },
+                properties: {
+                    name: 'user_id',
+                    type: 'hidden',
+                    required: true,
+                },
+            },
         ]
     })
 
@@ -160,6 +170,9 @@ export default () => {
           {
               form.name &&
               <Form
+                defaults={{
+                    user_id: 1
+                }}
                 components={{
                     input: Input,
                     submit: Submit,

@@ -56,6 +56,14 @@ export default class Form extends Component {
 
         form.fields.forEach((field) => {
             model[field.properties.name] = ''
+            if (field.properties.default) {
+                model[field.properties.name] = field.properties.default
+            }
+            if (props.defaults[field.properties.name]) {
+                const value = props.defaults[field.properties.name]
+                field.properties.default = value
+                model[field.properties.name] = value
+            }
         })
 
         this.state = {model, form}
@@ -76,6 +84,8 @@ export default class Form extends Component {
         for (let name in model) {
             formData.append(name, model[name])
         }
+
+        console.log(model)
 
         fetch(this.state.form.route, {
             method: 'post',
