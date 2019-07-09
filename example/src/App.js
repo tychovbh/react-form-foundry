@@ -40,6 +40,7 @@ const Textarea = styled.textarea`
     border-radius: 4px;
     width: 100%;
     padding: 10px 10px;
+    margin-bottom: 10px;
     min-height: 100px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -54,14 +55,41 @@ const Label = styled.label`
 
 const Title = styled.h3`
     text-align: center;
-    color: green;
+    color: slategrey;
     text-transform: uppercase;
+`
+
+const Description = styled.h5`
+    text-align: center;
+    color: slategrey;
+    text-transform: uppercase;
+`
+
+const Select = styled.select`
+    border: 1px solid gray;
+    border-radius: 4px;
+    width: 100%;
+    padding: 10px 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-bottom: 1em;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+    
+    &::after {
+      content: 'halo'
+      //content: 'http://cdn.onlinewebfonts.com/svg/img_295694.svg';
+    }
 `
 
 export default () => {
     const [form, setForm] = useState({
         name: 'cateogories',
         label: 'Categories',
+        description: 'This is a very nice description',
         fields: [
             {
                 element: {
@@ -137,7 +165,9 @@ export default () => {
                     submit: Submit,
                     label: Label,
                     textarea: Textarea,
-                    title: Title
+                    title: Title,
+                    description: Description,
+                    select: Select,
                 }}
                 form={form}
               />
