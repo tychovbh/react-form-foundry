@@ -25,8 +25,8 @@ const TextAreaField = ({field, component, onChange, id}) => {
     const Component = component || DefaultTextarea
 
     return <Component
-        {...field.properties}
-        onChange={(event) => onChange(event.target.value)}
+      {...field.properties}
+      onChange={(event) => onChange(event.target.value)}
     />
 }
 
@@ -49,7 +49,7 @@ export default class Form extends Component {
         textarea: TextAreaField,
     }
 
-    handleSubmit = (event) => {
+    submit = (event) => {
         event.preventDefault()
         const {model} = this.state
 
@@ -78,38 +78,36 @@ export default class Form extends Component {
         const Label = this.component('label') || DefaultLabel
 
         return (
-          <div>
-              <form onSubmit={this.handleSubmit}>
-                  {form.label && <h3>{form.label}</h3>}
-                  {form.description && <p>{form.description}</p>}
-                  {
-                      form.fields.map((field, index) => {
-                          const Field = this.fields[field.element.name]
-                          const id = `form-generator-field-${field.properties.name}`
+          <form onSubmit={this.submit}>
+              {form.label && <h3>{form.label}</h3>}
+              {form.description && <p>{form.description}</p>}
+              {
+                  form.fields.map((field, index) => {
+                      const Field = this.fields[field.element.name]
+                      const id = `form-generator-field-${field.properties.name}`
 
-                          return (
-                            <div className={'form-generator-field'}>
-                                {
-                                    field.properties.label &&
-                                    <Label for={id} key={index}>
-                                        {field.properties.label}
-                                    </Label>
-                                }
-                                <Field
-                                  id={id}
-                                  field={field}
-                                  component={this.component(field.element.name)}
-                                  onChange={(value) => {
-                                      model[field.properties.name] = value
-                                      this.setState({model})
-                                  }}/>
-                            </div>
-                          )
-                      })
-                  }
-                  <Submit type={'submit'} value={'Submit'}/>
-              </form>
-          </div>
+                      return (
+                        <div className={'form-generator-field'}>
+                            {
+                                field.properties.label &&
+                                <Label for={id} key={index}>
+                                    {field.properties.label}
+                                </Label>
+                            }
+                            <Field
+                              id={id}
+                              field={field}
+                              component={this.component(field.element.name)}
+                              onChange={(value) => {
+                                  model[field.properties.name] = value
+                                  this.setState({model})
+                              }}/>
+                        </div>
+                      )
+                  })
+              }
+              <Submit type={'submit'} value={'Submit'}/>
+          </form>
         )
     }
 }
