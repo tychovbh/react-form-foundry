@@ -8,11 +8,12 @@ const DefaultDescription = (props) => <h4 {...props}>{props.children}</h4>
 const DefaultSelect = (props) => <select {...props}/>
 
 
-const InputField = ({field, component, onChange, id}) => {
+const InputField = ({field, component, onChange, id, state}) => {
     const Component = component || DefaultInput
 
     return <Component
         {...field.properties}
+        value={state}
         onChange={(event) => {
             if (field.properties.type === 'file') {
                 return onChange(event.target.files[0])
@@ -25,24 +26,28 @@ const InputField = ({field, component, onChange, id}) => {
     />
 }
 
-const TextAreaField = ({field, component, onChange, id}) => {
+const TextAreaField = ({field, component, onChange, id, state}) => {
     const Component = component || DefaultTextarea
 
     return <Component
         {...field.properties}
+        value={state}
+        id={id}
         onChange={(event) => onChange(event.target.value)}
     />
 }
 
-const SelectField = ({field, component, onChange, id}) => {
+const SelectField = ({field, component, onChange, id, state}) => {
     const Component = component || DefaultSelect
 
     return <Component
+        defaultValue={state}
         {...field.properties}
+        id={id}
         onChange={(event) => onChange(event.target.value)}
     >
         {field.properties.options.map((option, index) => {
-            return <option key={index}>{option.label}</option>
+            return <option value={option.value} key={index}>{option.label}</option>
         })}
     </Component>
 }
@@ -56,13 +61,14 @@ export default class Form extends Component {
 
         form.fields.forEach((field) => {
             model[field.properties.name] = ''
+            if (field.element.name === 'select' && field.properties.options.length) {
+                model[field.properties.name] = field.properties.options[0].value
+            }
             if (field.properties.default) {
                 model[field.properties.name] = field.properties.default
             }
-            if (props.defaults[field.properties.name]) {
-                const value = props.defaults[field.properties.name]
-                field.properties.default = value
-                model[field.properties.name] = value
+            if (props.defaults && props.defaults[field.properties.name]) {
+                model[field.properties.name] = props.defaults[field.properties.name]
             }
         })
 
@@ -78,20 +84,20 @@ export default class Form extends Component {
     submit = (event) => {
         event.preventDefault()
         const {model} = this.state
-
+        const {onResponse} = this.props
         let formData = new FormData()
 
         for (let name in model) {
             formData.append(name, model[name])
         }
 
-        console.log(model)
-
         fetch(this.state.form.route, {
             method: 'post',
             body: formData
         }).then((response) => {
-            //
+            if (onResponse) {
+                onResponse(response, model)
+            }
         })
     }
 
@@ -102,13 +108,14 @@ export default class Form extends Component {
 
     render() {
         const {model, form} = this.state
+        const {onSubmit} = this.props
         const Submit = this.component('submit') || DefaultInput
         const Label = this.component('label') || DefaultLabel
         const Title = this.component('title') || DefaultTitle
         const Description = this.component('description') || DefaultDescription
 
         return (
-            <form onSubmit={this.submit}>
+            <form onSubmit={onSubmit ? (event) => onSubmit(event, model) : this.submit}>
                 {form.label && <Title>{form.label}</Title>}
                 {form.description && <Description>{form.description}</Description>}
                 {
@@ -127,6 +134,7 @@ export default class Form extends Component {
                                 <Field
                                     id={id}
                                     field={field}
+                                    state={model[field.properties.name]}
                                     component={this.component(field.element.name)}
                                     onChange={(value) => {
                                         model[field.properties.name] = value

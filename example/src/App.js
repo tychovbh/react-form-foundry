@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
 import Form from 'react-form-foundry'
 
@@ -78,15 +78,10 @@ const Select = styled.select`
     -moz-appearance: none;
     text-indent: 1px;
     text-overflow: '';
-    
-    &::after {
-      content: 'halo'
-      //content: 'http://cdn.onlinewebfonts.com/svg/img_295694.svg';
-    }
 `
 
 export default () => {
-    const [form, setForm] = useState({
+    const [form] = useState({
         name: 'cateogories',
         label: 'Categories',
         description: 'This is a very accurate description',
@@ -155,25 +150,29 @@ export default () => {
     })
 
     return (
-      <Container>
-          {
-              form.name &&
-              <Form
-                defaults={{
-                    user_id: 1
-                }}
-                components={{
-                    input: Input,
-                    submit: Submit,
-                    label: Label,
-                    textarea: Textarea,
-                    title: Title,
-                    description: Description,
-                    select: Select,
-                }}
-                form={form}
-              />
-          }
-      </Container>
+        <Container>
+            {
+                form.name &&
+                <Form
+                    onSubmit={(event, model) => {
+                        event.preventDefault()
+                        console.log(model)
+                    }}
+                    defaults={{
+                        user_id: 1,
+                    }}
+                    components={{
+                        input: Input,
+                        submit: Submit,
+                        label: Label,
+                        textarea: Textarea,
+                        title: Title,
+                        description: Description,
+                        select: Select,
+                    }}
+                    form={form}
+                />
+            }
+        </Container>
     )
 }
