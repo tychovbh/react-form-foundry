@@ -6,7 +6,7 @@ const DefaultLabel = (props) => <label {...props}/>
 const DefaultTitle = (props) => <h3 {...props}>{props.children}</h3>
 const DefaultDescription = (props) => <h4 {...props}>{props.children}</h4>
 const DefaultSelect = (props) => <select {...props}/>
-const DefaultImage = (props) => <img {...props} alt={''}/>
+const DefaultImage = (props) => <img {...props}/>
 
 
 const InputField = ({field, component, onChange, id, state}) => {
@@ -125,10 +125,7 @@ export default ({form, onSubmit, onResponse, components, defaults}) => {
         if (model[field.properties.name] && model[field.properties.name].preview) {
             return model[field.properties.name].preview
         }
-        if (defaults[field.properties.name]) {
-            return defaults[field.properties.name]
-        }
-        return ''
+        return defaults[field.properties.name] || ''
     }
 
     const Submit = component('submit') || DefaultInput
