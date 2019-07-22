@@ -6,24 +6,37 @@ const DefaultLabel = (props) => <label {...props}/>
 const DefaultTitle = (props) => <h3 {...props}>{props.children}</h3>
 const DefaultDescription = (props) => <h4 {...props}>{props.children}</h4>
 const DefaultSelect = (props) => <select {...props}/>
+const DefaultImage = (props) => <img {...props} alt={''}/>
 
 
 const InputField = ({field, component, onChange, id, state}) => {
     const Component = component || DefaultInput
+    let additionalProps = {}
 
-    return <Component
-        {...field.properties}
-        value={state}
-        onChange={(event) => {
-            if (field.properties.type === 'file') {
-                return onChange(event.target.files[0])
-            }
+    if (field.properties.type !== 'file') {
+        additionalProps.value = state
+    }
 
-            onChange(event.target.value)
-        }}
-        className={`form-generator-input-${field.properties.type}`}
-        id={id}
-    />
+    return (
+        <div>
+            <Component
+                {...field.properties}
+                {...additionalProps}
+                onChange={(event) => {
+                    if (field.properties.type === 'file') {
+                        let file = event.target.files[0]
+                        file.preview = window.URL.createObjectURL(file)
+                        return onChange(file)
+                    }
+
+                    onChange(event.target.value)
+                }}
+                className={`form-generator-input-${field.properties.type}`}
+                id={id}
+            />
+        </div>
+
+    )
 }
 
 const TextAreaField = ({field, component, onChange, id, state}) => {
@@ -31,7 +44,7 @@ const TextAreaField = ({field, component, onChange, id, state}) => {
 
     return <Component
         {...field.properties}
-        value={state}
+        defaultValue={state}
         id={id}
         onChange={(event) => onChange(event.target.value)}
     />
@@ -61,15 +74,17 @@ const Fields = {
 const fields = (form, defaults) => {
     const fields = {}
     form.fields.forEach((field) => {
-        fields[field.properties.name] = ''
-        if (field.element.name === 'select' && field.properties.options.length) {
-            fields[field.properties.name] = field.properties.options[0].value
-        }
-        if (field.properties.default) {
-            fields[field.properties.name] = field.properties.default
-        }
-        if (defaults && defaults[field.properties.name]) {
-            fields[field.properties.name] = defaults[field.properties.name]
+        if (field.properties.type !== 'file') {
+            fields[field.properties.name] = ''
+            if (field.element.name === 'select' && field.properties.options.length) {
+                fields[field.properties.name] = field.properties.options[0].value
+            }
+            if (field.properties.default) {
+                fields[field.properties.name] = field.properties.default
+            }
+            if (defaults && defaults[field.properties.name]) {
+                fields[field.properties.name] = defaults[field.properties.name]
+            }
         }
     })
 
@@ -91,7 +106,7 @@ export default ({form, onSubmit, onResponse, components, defaults}) => {
 
         fetch(form.route, {
             method: 'post',
-            body: formData
+            body: formData,
         }).then((response) => {
             if (onResponse) {
                 onResponse(response, model)
@@ -101,6 +116,19 @@ export default ({form, onSubmit, onResponse, components, defaults}) => {
 
     const component = (name) => {
         return components && components[name] ? components[name] : null
+    }
+
+    const getPreview = (field) => {
+        if (field.properties.type !== 'file') {
+            return ''
+        }
+        if (model[field.properties.name] && model[field.properties.name].preview) {
+            return model[field.properties.name].preview
+        }
+        if (defaults[field.properties.name]) {
+            return defaults[field.properties.name]
+        }
+        return ''
     }
 
     const Submit = component('submit') || DefaultInput
@@ -116,6 +144,8 @@ export default ({form, onSubmit, onResponse, components, defaults}) => {
                 form.fields.map((field, index) => {
                     const Field = Fields[field.element.name]
                     const id = `form-generator-field-${field.properties.name}`
+                    const Image = component('image') || DefaultImage
+                    const preview = getPreview(field)
 
                     return (
                         <div className={'form-generator-field'} key={index}>
@@ -133,6 +163,7 @@ export default ({form, onSubmit, onResponse, components, defaults}) => {
                                 onChange={(value) => {
                                     setModel({...model, [field.properties.name]: value})
                                 }}/>
+                            {preview && <Image src={preview} alt={field.properties.alt}/>}
                         </div>
                     )
                 })

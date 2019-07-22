@@ -80,6 +80,12 @@ const Select = styled.select`
     text-overflow: '';
 `
 
+const Image = styled.img`
+    background: darkgrey;
+    width: 100px;
+    height: 100px;
+`
+
 export default () => {
     const [form] = useState({
         name: 'cateogories',
@@ -138,6 +144,16 @@ export default () => {
             },
             {
                 element: {
+                    name: 'input',
+                },
+                properties: {
+                    name: 'image',
+                    type: 'file',
+                    label: 'Image',
+                },
+            },
+            {
+                element: {
                     name: 'input'
                 },
                 properties: {
@@ -160,6 +176,7 @@ export default () => {
                     }}
                     defaults={{
                         user_id: 1,
+                        image: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/136102464-1557142812.jpg',
                     }}
                     components={{
                         input: Input,
@@ -169,6 +186,7 @@ export default () => {
                         title: Title,
                         description: Description,
                         select: Select,
+                        image: Image,
                     }}
                     form={form}
                 />
