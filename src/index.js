@@ -7,9 +7,9 @@ const DefaultTitle = (props) => <h3 {...props}>{props.children}</h3>
 const DefaultDescription = (props) => <h4 {...props}>{props.children}</h4>
 const DefaultSelect = (props) => <select {...props}/>
 const DefaultImage = (props) => <img {...props}/>
+const DefaultError = (props) => <p {...props}>{props.children}</p>
 
-
-const InputField = ({field, component, onChange, id, state}) => {
+const InputField = ({field, component, onChange, id, state, error}) => {
     const Component = component || DefaultInput
     let additionalProps = {}
 
@@ -22,6 +22,7 @@ const InputField = ({field, component, onChange, id, state}) => {
             <Component
                 {...field.properties}
                 {...additionalProps}
+                error={error}
                 onChange={(event) => {
                     if (field.properties.type === 'file') {
                         let file = event.target.files[0]
@@ -39,23 +40,25 @@ const InputField = ({field, component, onChange, id, state}) => {
     )
 }
 
-const TextAreaField = ({field, component, onChange, id, state}) => {
+const TextAreaField = ({field, component, onChange, id, state, error}) => {
     const Component = component || DefaultTextarea
 
     return <Component
         {...field.properties}
         defaultValue={state}
+        error={error}
         id={id}
         onChange={(event) => onChange(event.target.value)}
     />
 }
 
-const SelectField = ({field, component, onChange, id, state}) => {
+const SelectField = ({field, component, onChange, id, state, error}) => {
     const Component = component || DefaultSelect
 
     return <Component
         defaultValue={state}
         {...field.properties}
+        error={error}
         id={id}
         onChange={(event) => onChange(event.target.value)}
     >
@@ -91,7 +94,7 @@ const fields = (form, defaults) => {
     return fields
 }
 
-export default ({form, onSubmit, onResponse, components, defaults}) => {
+const Form = ({form, onSubmit, onResponse, components, defaults, errors}) => {
     const [model, setModel] = useState(fields(form, defaults))
 
     const submit = (event) => {
@@ -132,6 +135,7 @@ export default ({form, onSubmit, onResponse, components, defaults}) => {
     const Label = component('label') || DefaultLabel
     const Title = component('title') || DefaultTitle
     const Description = component('description') || DefaultDescription
+    const Error = component('error') || DefaultError
 
     return (
         <form onSubmit={onSubmit ? (event) => onSubmit(event, model) : submit}>
@@ -143,12 +147,13 @@ export default ({form, onSubmit, onResponse, components, defaults}) => {
                     const id = `form-generator-field-${field.properties.name}`
                     const Image = component('image') || DefaultImage
                     const preview = getPreview(field)
+                    const error = !!errors[field.properties.name]
 
                     return (
                         <div className={'form-generator-field'} key={index}>
                             {
                                 field.properties.label &&
-                                <Label htmlFor={id}>
+                                <Label error={error} htmlFor={id}>
                                     {field.properties.label}
                                 </Label>
                             }
@@ -156,11 +161,17 @@ export default ({form, onSubmit, onResponse, components, defaults}) => {
                                 id={id}
                                 field={field}
                                 state={model[field.properties.name]}
+                                error={error}
                                 component={component(field.element.name)}
                                 onChange={(value) => {
                                     setModel({...model, [field.properties.name]: value})
                                 }}/>
                             {preview && <Image src={preview} alt={field.properties.alt}/>}
+                            {
+                                error && errors[field.properties.name].map((error, index) =>
+                                    <Error key={index}>{error}</Error>
+                                )
+                            }
                         </div>
                     )
                 })
@@ -169,3 +180,5 @@ export default ({form, onSubmit, onResponse, components, defaults}) => {
         </form>
     )
 }
+
+export default Form

@@ -11,7 +11,7 @@ const Container = styled.div`
 `
 
 const Input = styled.input`
-    border: 1px solid gray;
+    border: 1px solid ${props => props.error ? 'red' : 'gray'};
     border-radius: 4px;
     width: 100%;
     padding: 10px 10px;
@@ -22,7 +22,7 @@ const Input = styled.input`
 `
 
 const Submit = styled(Input)`
-    border-color: green;,
+    border-color: 1px solid ${props => props.error ? 'red' : 'green'};
     font-weight: bold;
     color: green;
     max-width: 150px;
@@ -36,7 +36,7 @@ const Submit = styled(Input)`
 `
 
 const Textarea = styled.textarea`
-    border: 1px solid gray;
+    border: 1px solid ${props => props.error ? 'red' : 'gray'};
     border-radius: 4px;
     width: 100%;
     padding: 10px 10px;
@@ -51,6 +51,7 @@ const Textarea = styled.textarea`
 const Label = styled.label`
     margin-bottom: 5px;
     display: block;
+    color: ${props => props.error ? 'red' : 'initial'};
 `
 
 const Title = styled.h3`
@@ -66,7 +67,7 @@ const Description = styled.h5`
 `
 
 const Select = styled.select`
-    border: 1px solid gray;
+    border: 1px solid ${props => props.error ? 'red' : 'gray'};
     border-radius: 4px;
     width: 100%;
     padding: 10px 10px;
@@ -84,6 +85,12 @@ const Image = styled.img`
     background: darkgrey;
     width: 100px;
     height: 100px;
+`
+
+const Error = styled.p`
+     color: red; 
+     font-size: 10px;
+     text-align: center;
 `
 
 export default () => {
@@ -178,6 +185,10 @@ export default () => {
                         user_id: 1,
                         image: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/136102464-1557142812.jpg',
                     }}
+                    errors={{
+                        firstname: ['Firstname should be at least 2 characters long'],
+                        surname: ['surname is required', 'surname should be 2 at least characters long'],
+                    }}
                     components={{
                         input: Input,
                         submit: Submit,
@@ -187,6 +198,7 @@ export default () => {
                         description: Description,
                         select: Select,
                         image: Image,
+                        error: Error,
                     }}
                     form={form}
                 />
