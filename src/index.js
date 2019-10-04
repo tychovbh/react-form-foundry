@@ -164,7 +164,7 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                     const id = `form-generator-field-${field.properties.name}`
                     const Image = component(components, 'image') || DefaultImage
                     const preview = option(options, 'image').previewDisabled ? false : getPreview(field)
-                    const error = !!errors[field.properties.name]
+                    const error = errors && !!errors[field.properties.name]
 
                     return (
                         <div className={'form-generator-field'} key={index}>
