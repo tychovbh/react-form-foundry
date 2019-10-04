@@ -9,6 +9,17 @@ const DefaultSelect = (props) => <select {...props}/>
 const DefaultImage = (props) => <img {...props}/>
 const DefaultError = (props) => <p {...props}>{props.children}</p>
 
+const component = (components, name) => {
+    return components && components[name] ? components[name] : null
+}
+
+const option = (options, name) => {
+    if (!options || !options[name]) {
+        return {}
+    }
+    return options[name]
+}
+
 const InputField = ({field, component, onChange, id, state, error}) => {
     const Component = component || DefaultInput
     let additionalProps = {}
@@ -94,9 +105,9 @@ const fields = (form, defaults) => {
     return fields
 }
 
-const Form = ({form, onSubmit, onResponse, components, defaults, errors}) => {
+export const FormBuilder = (props) => {
+    const {onSubmit, onResponse, children, form, defaults} = props
     const [model, setModel] = useState(fields(form, defaults))
-
     const submit = (event) => {
         event.preventDefault()
         let formData = new FormData()
@@ -116,10 +127,24 @@ const Form = ({form, onSubmit, onResponse, components, defaults, errors}) => {
             }
         })
     }
-
-    const component = (name) => {
-        return components && components[name] ? components[name] : null
+    let collection = []
+    if (children) {
+        collection = Array.isArray(children) ? children : [children]
     }
+    return (
+        <form onSubmit={onSubmit ? (event) => onSubmit(event, model) : submit}>
+            {
+                collection.map((child, index) =>
+                    React.cloneElement(child, {...props, model, setModel, key: index}),
+                )
+            }
+        </form>
+    )
+}
+
+export const FormFields = ({form, components, model, setModel, defaults, errors, options}) => {
+    const Label = component(components, 'label') || DefaultLabel
+    const Error = component(components, 'error') || DefaultError
 
     const getPreview = (field) => {
         if (field.properties.type !== 'file') {
@@ -131,22 +156,14 @@ const Form = ({form, onSubmit, onResponse, components, defaults, errors}) => {
         return defaults[field.properties.name] || ''
     }
 
-    const Submit = component('submit') || DefaultInput
-    const Label = component('label') || DefaultLabel
-    const Title = component('title') || DefaultTitle
-    const Description = component('description') || DefaultDescription
-    const Error = component('error') || DefaultError
-
     return (
-        <form onSubmit={onSubmit ? (event) => onSubmit(event, model) : submit}>
-            {form.label && <Title>{form.label}</Title>}
-            {form.description && <Description>{form.description}</Description>}
+        <React.Fragment>
             {
                 form.fields.map((field, index) => {
                     const Field = Fields[field.element.name]
                     const id = `form-generator-field-${field.properties.name}`
-                    const Image = component('image') || DefaultImage
-                    const preview = getPreview(field)
+                    const Image = component(components, 'image') || DefaultImage
+                    const preview = option(options, 'image').previewDisabled ? false : getPreview(field)
                     const error = !!errors[field.properties.name]
 
                     return (
@@ -162,22 +179,47 @@ const Form = ({form, onSubmit, onResponse, components, defaults, errors}) => {
                                 field={field}
                                 state={model[field.properties.name]}
                                 error={error}
-                                component={component(field.element.name)}
+                                component={component(components, field.element.name)}
                                 onChange={(value) => {
                                     setModel({...model, [field.properties.name]: value})
                                 }}/>
                             {preview && <Image src={preview} alt={field.properties.alt}/>}
                             {
                                 error && errors[field.properties.name].map((error, index) =>
-                                    <Error key={index}>{error}</Error>
+                                    <Error key={index}>{error}</Error>,
                                 )
                             }
                         </div>
                     )
                 })
             }
-            <Submit type={'submit'} value={'Submit'}/>
-        </form>
+        </React.Fragment>
+    )
+}
+
+export const FormTitle = ({form, components}) => {
+    const Title = component(components, 'title') || DefaultTitle
+    return <Title>{form.title}</Title>
+}
+
+export const FormDescription = ({form, components}) => {
+    const Description = component(components, 'description') || DefaultDescription
+    return <Description>{form.description}</Description>
+}
+
+export const FormSubmit = ({components}) => {
+    const Submit = component(components, 'submit') || DefaultInput
+    return <Submit type={'submit'} value={'Submit'}/>
+}
+
+const Form = (props) => {
+    return (
+        <FormBuilder {...props}>
+            <FormTitle/>
+            <FormDescription/>
+            <FormFields/>
+            <FormSubmit/>
+        </FormBuilder>
     )
 }
 

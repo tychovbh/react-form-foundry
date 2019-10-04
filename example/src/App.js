@@ -97,7 +97,8 @@ export default () => {
     const [form] = useState({
         name: 'cateogories',
         label: 'Categories',
-        description: 'This is a very accurate description',
+        title: 'Awesome Title',
+        description: 'Totally Accurate Form Description',
         fields: [
             {
                 element: {
@@ -201,6 +202,11 @@ export default () => {
                         error: Error,
                     }}
                     form={form}
+                    options={{
+                        image: {
+                            previewDisabled: true,
+                        }
+                    }}
                 />
             }
         </Container>
