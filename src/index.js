@@ -8,6 +8,7 @@ const DefaultDescription = (props) => <h4 {...props}>{props.children}</h4>
 const DefaultSelect = (props) => <select {...props}/>
 const DefaultImage = (props) => <img {...props}/>
 const DefaultError = (props) => <p {...props}>{props.children}</p>
+const DefaultImageContainer = (props) => <div {...props}>{props.children}</div>
 
 const component = (components, name) => {
     return components && components[name] ? components[name] : null
@@ -22,20 +23,21 @@ const option = (options, name) => {
 
 const InputField = ({field, component, onChange, id, state, error}) => {
     const Component = component || DefaultInput
+    const properties = field.properties
     let additionalProps = {}
 
-    if (field.properties.type !== 'file') {
+    if (properties.type !== 'file') {
         additionalProps.value = state
     }
 
     return (
         <div>
             <Component
-                {...field.properties}
+                {...properties}
                 {...additionalProps}
                 error={error}
                 onChange={(event) => {
-                    if (field.properties.type === 'file') {
+                    if (properties.type === 'file') {
                         let file = event.target.files[0]
                         file.preview = window.URL.createObjectURL(file)
                         return onChange(file)
@@ -43,7 +45,7 @@ const InputField = ({field, component, onChange, id, state, error}) => {
 
                     onChange(event.target.value)
                 }}
-                className={`form-generator-input-${field.properties.type}`}
+                className={`form-generator-input-${properties.type}`}
                 id={id}
             />
         </div>
@@ -88,16 +90,17 @@ const Fields = {
 const fields = (form, defaults) => {
     const fields = {}
     form.fields.forEach((field) => {
-        if (field.properties.type !== 'file') {
-            fields[field.properties.name] = ''
-            if (field.element.name === 'select' && field.properties.options.length) {
-                fields[field.properties.name] = field.properties.options[0].value
+        const properties = field.properties
+        if (properties.type !== 'file') {
+            fields[properties.name] = ''
+            if (field.element.name === 'select' && properties.options.length) {
+                fields[properties.name] = properties.options[0].value
             }
-            if (field.properties.default) {
-                fields[field.properties.name] = field.properties.default
+            if (properties.default) {
+                fields[properties.name] = properties.default
             }
-            if (defaults && defaults[field.properties.name]) {
-                fields[field.properties.name] = defaults[field.properties.name]
+            if (defaults && defaults[properties.name]) {
+                fields[properties.name] = defaults[properties.name]
             }
         }
     })
@@ -127,10 +130,13 @@ export const FormBuilder = (props) => {
             }
         })
     }
+
     let collection = []
+
     if (children) {
         collection = Array.isArray(children) ? children : [children]
     }
+
     return (
         <form onSubmit={onSubmit ? (event) => onSubmit(event, model) : submit}>
             {
@@ -145,15 +151,20 @@ export const FormBuilder = (props) => {
 export const FormFields = ({form, components, model, setModel, defaults, errors, options}) => {
     const Label = component(components, 'label') || DefaultLabel
     const Error = component(components, 'error') || DefaultError
+    const Image = component(components, 'image') || DefaultImage
+    const ImageContainer = component(components, 'image_container') || DefaultImageContainer
 
     const getPreview = (field) => {
-        if (field.properties.type !== 'file') {
-            return ''
+        const properties = field.properties
+        if (model[properties.name] && model[properties.name].preview) {
+            return model[properties.name].preview
         }
-        if (model[field.properties.name] && model[field.properties.name].preview) {
-            return model[field.properties.name].preview
+
+        if (defaults[properties.name] && !properties.multiple) {
+            return defaults[properties.name]
         }
-        return defaults[field.properties.name] || ''
+
+        return  ''
     }
 
     return (
@@ -161,32 +172,42 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
             {
                 form.fields.map((field, index) => {
                     const Field = Fields[field.element.name]
-                    const id = `form-generator-field-${field.properties.name}`
-                    const Image = component(components, 'image') || DefaultImage
-                    const preview = option(options, 'image').previewDisabled ? false : getPreview(field)
-                    const error = errors && !!errors[field.properties.name]
+                    const properties = field.properties
+                    const id = `form-generator-field-${properties.name}`
+                    const preview = getPreview(field)
+                    const error = errors && !!errors[properties.name]
 
                     return (
                         <div className={'form-generator-field'} key={index}>
                             {
-                                field.properties.label &&
+                                properties.label &&
                                 <Label error={error} htmlFor={id}>
-                                    {field.properties.label}
+                                    {properties.label}
                                 </Label>
                             }
                             <Field
                                 id={id}
                                 field={field}
-                                state={model[field.properties.name]}
+                                state={model[properties.name]}
                                 error={error}
                                 component={component(components, field.element.name)}
                                 onChange={(value) => {
-                                    setModel({...model, [field.properties.name]: value})
+                                    setModel({...model, [properties.name]: value})
                                 }}/>
-                            {preview && <Image src={preview} alt={field.properties.alt}/>}
                             {
-                                error && errors[field.properties.name].map((error, index) =>
-                                    <Error key={index}>{error}</Error>,
+                                properties.type === 'file' &&
+                                    <ImageContainer>
+                                        {preview && <Image src={preview} alt={properties.alt}/>}
+                                        {
+                                            properties.multiple &&
+                                            defaults[properties.name] &&
+                                            <Image src={defaults[properties.name]} alt={properties.alt}/>
+                                        }
+                                    </ImageContainer>
+                            }
+                            {
+                                error && errors[properties.name].map((error, index) =>
+                                    <Error key={index}>{error}</Error>
                                 )
                             }
                         </div>

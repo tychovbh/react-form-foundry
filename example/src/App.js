@@ -93,6 +93,10 @@ const Error = styled.p`
      text-align: center;
 `
 
+const ImageContainer = styled.div`
+     border: 1px solid gray;
+`
+
 export default () => {
     const [form] = useState({
         name: 'cateogories',
@@ -158,6 +162,7 @@ export default () => {
                     name: 'image',
                     type: 'file',
                     label: 'Image',
+                    multiple: true
                 },
             },
             {
@@ -200,13 +205,9 @@ export default () => {
                         select: Select,
                         image: Image,
                         error: Error,
+                        image_container: ImageContainer
                     }}
                     form={form}
-                    options={{
-                        image: {
-                            previewDisabled: true,
-                        }
-                    }}
                 />
             }
         </Container>
