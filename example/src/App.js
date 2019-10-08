@@ -156,6 +156,19 @@ export default () => {
             },
             {
                 element: {
+                    name: 'select'
+                },
+                properties: {
+                    name: 'todo',
+                    label: 'Todos',
+                    options: [],
+                    source: 'https://jsonplaceholder.typicode.com/todos',
+                    label_key: 'title',
+                    value_key: 'id',
+                },
+            },
+            {
+                element: {
                     name: 'input',
                 },
                 properties: {
@@ -194,6 +207,9 @@ export default () => {
                     errors={{
                         firstname: ['Firstname should be at least 2 characters long'],
                         surname: ['surname is required', 'surname should be 2 at least characters long'],
+                    }}
+                    request={{
+                        headers: {'Authorization': 'Bearer {token}' }
                     }}
                     components={{
                         input: Input,

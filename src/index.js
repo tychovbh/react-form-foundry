@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 
 const DefaultInput = (props) => <input {...props}/>
 const DefaultTextarea = (props) => <textarea {...props}/>
@@ -65,18 +65,35 @@ const TextAreaField = ({field, component, onChange, id, state, error}) => {
     />
 }
 
-const SelectField = ({field, component, onChange, id, state, error}) => {
+const SelectField = ({field, component, onChange, id, state, error, request}) => {
     const Component = component || DefaultSelect
+    const properties = field.properties
+    const [options, setOptions] = useState(properties.options)
+
+    useEffect(() => {
+        if (properties.source) {
+            fetch(properties.source, {
+                headers: request.headers
+            })
+                .then(response => response.json())
+                .then(json => {
+                    setOptions(json)
+                })
+        }
+    }, [])
+
+    const label_key = properties.label_key || 'label'
+    const value_key = properties.label_key || 'value'
 
     return <Component
         defaultValue={state}
-        {...field.properties}
+        {...properties}
         error={error}
         id={id}
         onChange={(event) => onChange(event.target.value)}
     >
-        {field.properties.options.map((option, index) => {
-            return <option value={option.value} key={index}>{option.label}</option>
+        {Array.isArray(options) && options.map((option, index) => {
+            return <option value={option[value_key]} key={index}>{option[label_key]}</option>
         })}
     </Component>
 }
@@ -109,7 +126,7 @@ const fields = (form, defaults) => {
 }
 
 export const FormBuilder = (props) => {
-    const {onSubmit, onResponse, children, form, defaults} = props
+    const {onSubmit, onResponse, children, form, defaults, request} = props
     const [model, setModel] = useState(fields(form, defaults))
     const submit = (event) => {
         event.preventDefault()
@@ -124,6 +141,7 @@ export const FormBuilder = (props) => {
         fetch(form.route, {
             method: 'post',
             body: formData,
+            headers: request ? request.headers || {} : {}
         }).then((response) => {
             if (onResponse) {
                 onResponse(response, model)
@@ -148,7 +166,7 @@ export const FormBuilder = (props) => {
     )
 }
 
-export const FormFields = ({form, components, model, setModel, defaults, errors, options}) => {
+export const FormFields = ({form, components, model, setModel, defaults, errors, request}) => {
     const Label = component(components, 'label') || DefaultLabel
     const Error = component(components, 'error') || DefaultError
     const Image = component(components, 'image') || DefaultImage
@@ -164,7 +182,7 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
             return defaults[properties.name]
         }
 
-        return  ''
+        return ''
     }
 
     return (
@@ -190,24 +208,25 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                                 field={field}
                                 state={model[properties.name]}
                                 error={error}
+                                request={request || {}}
                                 component={component(components, field.element.name)}
                                 onChange={(value) => {
                                     setModel({...model, [properties.name]: value})
                                 }}/>
                             {
                                 properties.type === 'file' &&
-                                    <ImageContainer>
-                                        {preview && <Image src={preview} alt={properties.alt}/>}
-                                        {
-                                            properties.multiple &&
-                                            defaults[properties.name] &&
-                                            <Image src={defaults[properties.name]} alt={properties.alt}/>
-                                        }
-                                    </ImageContainer>
+                                <ImageContainer>
+                                    {preview && <Image src={preview} alt={properties.alt}/>}
+                                    {
+                                        properties.multiple &&
+                                        defaults[properties.name] &&
+                                        <Image src={defaults[properties.name]} alt={properties.alt}/>
+                                    }
+                                </ImageContainer>
                             }
                             {
                                 error && errors[properties.name].map((error, index) =>
-                                    <Error key={index}>{error}</Error>
+                                    <Error key={index}>{error}</Error>,
                                 )
                             }
                         </div>
