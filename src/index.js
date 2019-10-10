@@ -77,7 +77,8 @@ const SelectField = ({field, component, onChange, id, state, error, request}) =>
             })
                 .then(response => response.json())
                 .then(json => {
-                    setOptions(json)
+
+                    setOptions(properties.data_key ? json[properties.data_key] : json)
                 })
         }
     }, [])
