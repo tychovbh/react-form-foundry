@@ -127,7 +127,7 @@ const fields = (form, defaults) => {
 }
 
 export const FormBuilder = (props) => {
-    const {onSubmit, onResponse, children, form, defaults, request} = props
+    const {onSubmit, onResponse, form, defaults, request, components, errors} = props
     const [model, setModel] = useState(fields(form, defaults))
     const submit = (event) => {
         event.preventDefault()
@@ -150,19 +150,21 @@ export const FormBuilder = (props) => {
         })
     }
 
-    let collection = []
-
-    if (children) {
-        collection = Array.isArray(children) ? children : [children]
-    }
-
+    const children = React.Children.map(props.children, (child, index) =>
+        React.cloneElement(child, {
+            index,
+            form,
+            components,
+            model,
+            setModel,
+            defaults,
+            errors,
+            request
+        })
+    );
     return (
         <form onSubmit={onSubmit ? (event) => onSubmit(event, model) : submit}>
-            {
-                collection.map((child, index) =>
-                    React.cloneElement(child, {...props, model, setModel, key: index}),
-                )
-            }
+            {children}
         </form>
     )
 }
