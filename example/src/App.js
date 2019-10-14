@@ -232,6 +232,7 @@ export default () => {
                     }}
                     defaults={{
                         user_id: 1,
+                        landscape: 1,
                         image: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/136102464-1557142812.jpg',
                     }}
                     errors={{

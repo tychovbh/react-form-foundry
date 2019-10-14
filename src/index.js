@@ -26,9 +26,15 @@ const InputField = ({field, component, onChange, id, state, error}) => {
     const properties = field.properties
     let additionalProps = {}
 
-    if (properties.type !== 'file') {
+    if (properties.type !== 'file' && properties.type !== 'radio') {
         additionalProps.value = state
     }
+
+    console.log(state, properties.value)
+    if (properties.type === 'radio' && state === properties.value) {
+        additionalProps.checked = 'checked'
+    }
+
 
     return (
         <div>
@@ -117,7 +123,7 @@ const fields = (form, defaults) => {
             if (properties.default) {
                 fields[properties.name] = properties.default
             }
-            if (defaults && defaults[properties.name]) {
+            if (defaults && defaults[properties.name] !== undefined) {
                 fields[properties.name] = defaults[properties.name]
             }
         }
