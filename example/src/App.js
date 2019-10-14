@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import styled from 'styled-components'
-import Form from 'react-form-foundry'
+import Form, {FormBuilder, FormFields, FormSubmit, FormTitle, FormDescription} from 'react-form-foundry'
 
 const Container = styled.div`
     max-width: 320px;
@@ -217,12 +217,10 @@ export default () => {
         ]
     })
 
-    const [welkomtext, setWelkomtext] = useState('Welkom tycho')
-
     return (
-        <Container>
-            <p>{welkomtext}</p>
-            <button onClick={() => setWelkomtext('Welkom rutger')}>zeg welkom aan rutgv</button>
+        <>
+            <Container>
+            <h1>Form</h1>
             {
                 form.name &&
                 <Form
@@ -257,6 +255,47 @@ export default () => {
                     form={form}
                 />
             }
-        </Container>
+            </Container>
+            <Container>
+            <h1>Form Builder</h1>
+            <FormBuilder
+                onSubmit={(event, model) => {
+                    event.preventDefault()
+                    console.log(model)
+                }}
+                defaults={{
+                    user_id: 1,
+                    image: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/136102464-1557142812.jpg',
+                }}
+                errors={{
+                    firstname: ['Firstname should be at least 2 characters long'],
+                    surname: ['surname is required', 'surname should be 2 at least characters long'],
+                }}
+                request={{
+                    headers: {'Authorization': 'Bearer {token}' }
+                }}
+                components={{
+                    input: Input,
+                    submit: Submit,
+                    label: Label,
+                    textarea: Textarea,
+                    title: Title,
+                    description: Description,
+                    select: Select,
+                    image: Image,
+                    error: Error,
+                    image_container: ImageContainer
+                }}
+                form={form}
+            >
+                <FormTitle/>
+                <FormDescription/>
+                <p><strong>Before fields</strong></p>
+                <FormFields/>
+                <p><strong>After fields</strong></p>
+                <FormSubmit/>
+            </FormBuilder>
+            </Container>
+        </>
     )
 }
