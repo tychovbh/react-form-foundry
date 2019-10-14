@@ -30,7 +30,6 @@ const InputField = ({field, component, onChange, id, state, error}) => {
         additionalProps.value = state
     }
 
-    console.log(state, properties.value)
     if (properties.type === 'radio' && state === properties.value) {
         additionalProps.checked = 'checked'
     }
