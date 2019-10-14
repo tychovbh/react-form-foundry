@@ -112,7 +112,7 @@ export default () => {
                     name: 'firstname',
                     type: 'text',
                     required: true,
-                    label: 'First name'
+                    label: 'First namee'
                 },
             },
             {
@@ -188,11 +188,41 @@ export default () => {
                     required: true,
                 },
             },
+            {
+                element: {
+                    name: 'input'
+                },
+                properties: {
+                    id: 'landscape',
+                    name: 'landscape',
+                    label: 'Portrait',
+                    type: 'radio',
+                    value: 0,
+                    required: true,
+                },
+            },
+            {
+                element: {
+                    name: 'input'
+                },
+                properties: {
+                    id: 'landscape',
+                    name: 'landscape',
+                    label: 'Landscape',
+                    type: 'radio',
+                    value: 1,
+                    required: true,
+                },
+            },
         ]
     })
 
+    const [welkomtext, setWelkomtext] = useState('Welkom tycho')
+
     return (
         <Container>
+            <p>{welkomtext}</p>
+            <button onClick={() => setWelkomtext('Welkom rutger')}>zeg welkom aan rutgv</button>
             {
                 form.name &&
                 <Form
