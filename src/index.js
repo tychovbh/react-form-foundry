@@ -1,5 +1,8 @@
 import React, {useState, useEffect} from 'react'
 
+import CKEditor from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+
 const DefaultInput = (props) => <input {...props}/>
 const DefaultTextarea = (props) => <textarea {...props}/>
 const DefaultLabel = (props) => <label {...props}/>
@@ -78,7 +81,7 @@ const SelectField = ({field, component, onChange, id, state, error, request}) =>
     useEffect(() => {
         if (properties.source) {
             fetch(properties.source, {
-                headers: request.headers
+                headers: request.headers,
             })
                 .then(response => response.json())
                 .then(json => {
@@ -104,10 +107,25 @@ const SelectField = ({field, component, onChange, id, state, error, request}) =>
     </Component>
 }
 
+const Wysiwyg = ({state, field, onChange}) => {
+    const config = field.properties.config || {}
+    return (
+        <CKEditor
+            editor={ClassicEditor}
+            data={state}
+            config={config}
+            onChange={(event, editor) => {
+                onChange(editor.getData())
+            }}
+        />
+    )
+}
+
 const Fields = {
     input: InputField,
     textarea: TextAreaField,
     select: SelectField,
+    wysiwyg: Wysiwyg,
 }
 
 const fields = (form, defaults) => {
@@ -147,7 +165,7 @@ export const FormBuilder = (props) => {
         fetch(form.route, {
             method: 'post',
             body: formData,
-            headers: request ? request.headers || {} : {}
+            headers: request ? request.headers || {} : {},
         }).then((response) => {
             if (onResponse) {
                 onResponse(response, model)
@@ -164,9 +182,9 @@ export const FormBuilder = (props) => {
             setModel,
             defaults,
             errors,
-            request
-        })
-    );
+            request,
+        }),
+    )
     return (
         <form onSubmit={onSubmit ? (event) => onSubmit(event, model) : submit}>
             {children}

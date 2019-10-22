@@ -106,38 +106,38 @@ export default () => {
         fields: [
             {
                 element: {
-                    name: 'input'
+                    name: 'input',
                 },
                 properties: {
                     name: 'firstname',
                     type: 'text',
                     required: true,
-                    label: 'First namee'
+                    label: 'First name',
                 },
             },
             {
                 element: {
-                    name: 'input'
+                    name: 'input',
                 },
                 properties: {
                     name: 'surname',
                     type: 'text',
                     required: true,
-                    label: 'Surname'
+                    label: 'Surname',
                 },
             },
             {
                 element: {
-                    name: 'textarea'
+                    name: 'textarea',
                 },
                 properties: {
                     name: 'description',
-                    label: 'Description'
+                    label: 'Description',
                 },
             },
             {
                 element: {
-                    name: 'select'
+                    name: 'select',
                 },
                 properties: {
                     name: 'company',
@@ -145,18 +145,18 @@ export default () => {
                     options: [
                         {
                             value: 1,
-                            label: 'Google'
+                            label: 'Google',
                         },
                         {
                             value: 2,
-                            label: 'Microsoft'
+                            label: 'Microsoft',
                         },
-                    ]
+                    ],
                 },
             },
             {
                 element: {
-                    name: 'select'
+                    name: 'select',
                 },
                 properties: {
                     name: 'todo',
@@ -175,12 +175,12 @@ export default () => {
                     name: 'image',
                     type: 'file',
                     label: 'Image',
-                    multiple: true
+                    multiple: true,
                 },
             },
             {
                 element: {
-                    name: 'input'
+                    name: 'input',
                 },
                 properties: {
                     name: 'user_id',
@@ -190,7 +190,7 @@ export default () => {
             },
             {
                 element: {
-                    name: 'input'
+                    name: 'input',
                 },
                 properties: {
                     id: 'landscape',
@@ -203,7 +203,7 @@ export default () => {
             },
             {
                 element: {
-                    name: 'input'
+                    name: 'input',
                 },
                 properties: {
                     id: 'landscape',
@@ -214,23 +214,78 @@ export default () => {
                     required: true,
                 },
             },
-        ]
+            {
+                element: {
+                    name: 'wysiwyg',
+                },
+                properties: {
+                    name: 'answer',
+                    label: 'Answer',
+                    required: true,
+                    config: {
+                        toolbar: [ 'Heading', 'bold', 'italic', 'bulletedList', 'numberedList', 'Link' ],
+                        heading: {
+                            options: [
+                                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
+                            ]
+                        }
+                    },
+                },
+            },
+        ],
     })
 
     return (
         <>
             <Container>
-            <h1>Form</h1>
-            {
-                form.name &&
-                <Form
+                <h1>Form</h1>
+                {
+                    form.name &&
+                    <Form
+                        onSubmit={(event, model) => {
+                            event.preventDefault()
+                            console.log(model)
+                        }}
+                        defaults={{
+                            user_id: 1,
+                            landscape: 1,
+                            image: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/136102464-1557142812.jpg',
+                            answer: '<p>My Answer</p>'
+                        }}
+                        errors={{
+                            firstname: ['Firstname should be at least 2 characters long'],
+                            surname: ['surname is required', 'surname should be 2 at least characters long'],
+                        }}
+                        request={{
+                            headers: {'Authorization': 'Bearer {token}'},
+                        }}
+                        components={{
+                            input: Input,
+                            submit: Submit,
+                            label: Label,
+                            textarea: Textarea,
+                            title: Title,
+                            description: Description,
+                            select: Select,
+                            image: Image,
+                            error: Error,
+                            image_container: ImageContainer,
+                        }}
+                        form={form}
+                    />
+                }
+            </Container>
+            <Container>
+                <h1>Form Builder</h1>
+                <FormBuilder
                     onSubmit={(event, model) => {
                         event.preventDefault()
                         console.log(model)
                     }}
                     defaults={{
                         user_id: 1,
-                        landscape: 1,
                         image: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/136102464-1557142812.jpg',
                     }}
                     errors={{
@@ -238,7 +293,7 @@ export default () => {
                         surname: ['surname is required', 'surname should be 2 at least characters long'],
                     }}
                     request={{
-                        headers: {'Authorization': 'Bearer {token}' }
+                        headers: {'Authorization': 'Bearer {token}'},
                     }}
                     components={{
                         input: Input,
@@ -250,51 +305,17 @@ export default () => {
                         select: Select,
                         image: Image,
                         error: Error,
-                        image_container: ImageContainer
+                        image_container: ImageContainer,
                     }}
                     form={form}
-                />
-            }
-            </Container>
-            <Container>
-            <h1>Form Builder</h1>
-            <FormBuilder
-                onSubmit={(event, model) => {
-                    event.preventDefault()
-                    console.log(model)
-                }}
-                defaults={{
-                    user_id: 1,
-                    image: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/136102464-1557142812.jpg',
-                }}
-                errors={{
-                    firstname: ['Firstname should be at least 2 characters long'],
-                    surname: ['surname is required', 'surname should be 2 at least characters long'],
-                }}
-                request={{
-                    headers: {'Authorization': 'Bearer {token}' }
-                }}
-                components={{
-                    input: Input,
-                    submit: Submit,
-                    label: Label,
-                    textarea: Textarea,
-                    title: Title,
-                    description: Description,
-                    select: Select,
-                    image: Image,
-                    error: Error,
-                    image_container: ImageContainer
-                }}
-                form={form}
-            >
-                <FormTitle/>
-                <FormDescription/>
-                <p><strong>Before fields</strong></p>
-                <FormFields/>
-                <p><strong>After fields</strong></p>
-                <FormSubmit/>
-            </FormBuilder>
+                >
+                    <FormTitle/>
+                    <FormDescription/>
+                    <p><strong>Before fields</strong></p>
+                    <FormFields/>
+                    <p><strong>After fields</strong></p>
+                    <FormSubmit/>
+                </FormBuilder>
             </Container>
         </>
     )
