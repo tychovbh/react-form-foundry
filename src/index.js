@@ -109,6 +109,7 @@ const SelectField = ({field, component, onChange, id, state, error, request}) =>
 
 const Wysiwyg = ({state, field, onChange}) => {
     const config = field.properties.config || {}
+
     return (
         <CKEditor
             editor={ClassicEditor}

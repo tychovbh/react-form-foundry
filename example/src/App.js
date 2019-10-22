@@ -221,7 +221,6 @@ export default () => {
                 properties: {
                     name: 'answer',
                     label: 'Answer',
-                    required: true,
                     config: {
                         toolbar: [ 'Heading', 'bold', 'italic', 'bulletedList', 'numberedList', 'Link' ],
                         heading: {
@@ -291,6 +290,7 @@ export default () => {
                     errors={{
                         firstname: ['Firstname should be at least 2 characters long'],
                         surname: ['surname is required', 'surname should be 2 at least characters long'],
+                        answer: ['answer is required']
                     }}
                     request={{
                         headers: {'Authorization': 'Bearer {token}'},
