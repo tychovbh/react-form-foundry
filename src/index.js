@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
-
-import CKEditor from '@ckeditor/ckeditor5-react'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+const isServer = typeof window === 'undefined'
+const CKEditor = isServer ? null : require('@ckeditor/ckeditor5-react')
+const ClassicEditor = isServer ? null : require('@ckeditor/ckeditor5-build-classic')
 
 const DefaultInput = (props) => <input {...props}/>
 const DefaultTextarea = (props) => <textarea {...props}/>
