@@ -1,65 +1,20 @@
 import React, {useState, useEffect} from 'react'
+import {InputField} from './fields'
+import {ImagePreview} from './fields'
+import {component} from './functions'
 const isServer = typeof window === 'undefined'
 const CKEditor = isServer ? null : require('@ckeditor/ckeditor5-react')
 const ClassicEditor = isServer ? null : require('@ckeditor/ckeditor5-build-classic')
-
-const DefaultInput = (props) => <input {...props}/>
 const DefaultTextarea = (props) => <textarea {...props}/>
 const DefaultLabel = (props) => <label {...props}/>
 const DefaultTitle = (props) => <h3 {...props}>{props.children}</h3>
 const DefaultDescription = (props) => <h4 {...props}>{props.children}</h4>
 const DefaultSelect = (props) => <select {...props}/>
-const DefaultImage = (props) => <img {...props}/>
 const DefaultError = (props) => <p {...props}>{props.children}</p>
-const DefaultImageContainer = (props) => <div {...props}>{props.children}</div>
 
-const component = (components, name) => {
-    return components && components[name] ? components[name] : null
-}
-
-const option = (options, name) => {
-    if (!options || !options[name]) {
-        return {}
-    }
-    return options[name]
-}
-
-const InputField = ({field, component, onChange, id, state, error}) => {
-    const Component = component || DefaultInput
-    const properties = field.properties
-    let additionalProps = {}
-
-    if (properties.type !== 'file' && properties.type !== 'radio') {
-        additionalProps.value = state
-    }
-
-    if (properties.type === 'radio' && state === properties.value) {
-        additionalProps.checked = 'checked'
-    }
+const DefaultInput = (props) => <input {...props}/>
 
 
-    return (
-        <div>
-            <Component
-                {...properties}
-                {...additionalProps}
-                error={error}
-                onChange={(event) => {
-                    if (properties.type === 'file') {
-                        let file = event.target.files[0]
-                        file.preview = window.URL.createObjectURL(file)
-                        return onChange(file)
-                    }
-
-                    onChange(event.target.value)
-                }}
-                className={`form-generator-input-${properties.type}`}
-                id={id}
-            />
-        </div>
-
-    )
-}
 
 const TextAreaField = ({field, component, onChange, id, state, error}) => {
     const Component = component || DefaultTextarea
@@ -196,21 +151,6 @@ export const FormBuilder = (props) => {
 export const FormFields = ({form, components, model, setModel, defaults, errors, request}) => {
     const Label = component(components, 'label') || DefaultLabel
     const Error = component(components, 'error') || DefaultError
-    const Image = component(components, 'image') || DefaultImage
-    const ImageContainer = component(components, 'image_container') || DefaultImageContainer
-
-    const getPreview = (field) => {
-        const properties = field.properties
-        if (model[properties.name] && model[properties.name].preview) {
-            return model[properties.name].preview
-        }
-
-        if (defaults[properties.name] && !properties.multiple) {
-            return defaults[properties.name]
-        }
-
-        return ''
-    }
 
     return (
         <React.Fragment>
@@ -219,7 +159,6 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                     const Field = Fields[field.element.name]
                     const properties = field.properties
                     const id = `form-generator-field-${properties.name}`
-                    const preview = getPreview(field)
                     const error = errors && !!errors[properties.name]
 
                     return (
@@ -237,19 +176,22 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                                 error={error}
                                 request={request || {}}
                                 component={component(components, field.element.name)}
-                                onChange={(value) => {
+                                onChange={(value, append = false) => {
+                                    if (append) {
+                                        let collection = model[properties.name] || []
+                                        collection.push(value)
+                                        value = collection
+                                    }
                                     setModel({...model, [properties.name]: value})
                                 }}/>
                             {
                                 properties.type === 'file' &&
-                                <ImageContainer>
-                                    {preview && <Image src={preview} alt={properties.alt}/>}
-                                    {
-                                        properties.multiple &&
-                                        defaults[properties.name] &&
-                                        <Image src={defaults[properties.name]} alt={properties.alt}/>
-                                    }
-                                </ImageContainer>
+                                <ImagePreview
+                                    multiple={field.properties.multiple}
+                                    Image={component(components, 'image')}
+                                    Contianer={component(components, 'image_container')}
+                                    uploaded={model[properties.name]}
+                                    defaults={defaults[properties.name]}/>
                             }
                             {
                                 error && errors[properties.name].map((error, index) =>

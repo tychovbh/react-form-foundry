@@ -175,6 +175,17 @@ export default () => {
                     name: 'image',
                     type: 'file',
                     label: 'Image',
+                    // multiple: true,
+                },
+            },
+            {
+                element: {
+                    name: 'input',
+                },
+                properties: {
+                    name: 'images',
+                    type: 'file',
+                    label: 'Images',
                     multiple: true,
                 },
             },
@@ -251,6 +262,10 @@ export default () => {
                             user_id: 1,
                             landscape: 1,
                             image: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/136102464-1557142812.jpg',
+                            images: [
+                                'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/136102464-1557142812.jpg',
+                                'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/136102464-1557142812.jpg'
+                            ],
                             answer: '<p>My Answer</p>'
                         }}
                         errors={{
