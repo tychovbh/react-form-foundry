@@ -175,7 +175,7 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                                 state={model[properties.name]}
                                 error={error}
                                 request={request || {}}
-                                component={component(components, field.element.name)}
+                                component={component(components, properties.type === 'file' ? 'input_file' : field.element.name)}
                                 onChange={(value, append = false) => {
                                     if (append) {
                                         let collection = model[properties.name] || []

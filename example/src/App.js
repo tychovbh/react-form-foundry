@@ -97,6 +97,48 @@ const ImageContainer = styled.div`
      border: 1px solid gray;
 `
 
+const InputFileContainer = styled.div`
+  position: relative;
+    background-color: #f59e2b;
+    color: white;
+    border: 0;
+    border-radius: 50px;
+    width: 120px;
+    margin: 1em auto;
+    :hover {
+        background-color: #CB7729;
+    }
+`
+
+export const InputFileButton = styled(Input)`
+    position: relative;
+    margin: 0 auto;
+    opacity: 0;
+    width: 120px;
+    height: 40px;
+    z-index: 2;
+`
+
+export const InputFileText = styled.span`
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    line-height: 40px;
+    text-align: center;
+`
+
+const InputFile = (props) => {
+    return (
+        <InputFileContainer>
+            <InputFileButton {...props}/>
+            <InputFileText>Upload</InputFileText>
+        </InputFileContainer>
+    )
+}
+
 export default () => {
     const [form] = useState({
         name: 'cateogories',
@@ -277,6 +319,7 @@ export default () => {
                         }}
                         components={{
                             input: Input,
+                            input_file: InputFile,
                             submit: Submit,
                             label: Label,
                             textarea: Textarea,
