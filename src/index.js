@@ -189,7 +189,7 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                                 <ImagePreview
                                     multiple={field.properties.multiple}
                                     Image={component(components, 'image')}
-                                    Contianer={component(components, 'image_container')}
+                                    Container={component(components, 'image_container')}
                                     uploaded={model[properties.name]}
                                     defaults={defaults[properties.name]}/>
                             }
