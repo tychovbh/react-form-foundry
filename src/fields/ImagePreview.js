@@ -23,13 +23,11 @@ export default ({Image, Container, defaults, uploaded, multiple}) => {
         images = multiple ? defaults : [defaults]
     }
 
+    images = images.concat(uploads(uploaded, multiple))
+
     return (
         <ImageContainer>
-            {
-                Boolean(images.length) &&
-                images.concat(uploads(uploaded, multiple)).map((image, index) =>
-                <TheImage key={index} src={image}/>)
-            }
+            {Boolean(images.length) && images.map((image, index) => <TheImage key={index} src={image}/>)}
         </ImageContainer>
     )
 }
