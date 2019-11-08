@@ -15,8 +15,8 @@ export default ({field, component, onChange, id, state, error}) => {
         additionalProps.checked = 'checked'
     }
 
-    const handleFiles = (files) => {
-
+    if (properties.autocomplete) {
+        additionalProps.autoComplete = properties.autocomplete
     }
 
     return (

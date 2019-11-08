@@ -166,6 +166,7 @@ export default () => {
                     type: 'text',
                     required: true,
                     label: 'Surname',
+                    autocomplete: 'off',
                 },
             },
             {
@@ -217,7 +218,6 @@ export default () => {
                     name: 'image',
                     type: 'file',
                     label: 'Image',
-                    // multiple: true,
                 },
             },
             {
@@ -344,11 +344,6 @@ export default () => {
                     defaults={{
                         user_id: 1,
                         image: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/136102464-1557142812.jpg',
-                    }}
-                    errors={{
-                        firstname: ['Firstname should be at least 2 characters long'],
-                        surname: ['surname is required', 'surname should be 2 at least characters long'],
-                        answer: ['answer is required']
                     }}
                     request={{
                         headers: {'Authorization': 'Bearer {token}'},
