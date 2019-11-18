@@ -9,7 +9,7 @@ function uploads(uploaded, multiple) {
         uploads = multiple ? uploaded : [uploaded]
     }
     return uploads.map((upload) => {
-        return checkFileType(upload) ? upload.preview : ''
+        return checkFileType(upload) ? upload.preview : null
     })
 }
 
