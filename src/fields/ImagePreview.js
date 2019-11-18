@@ -9,8 +9,20 @@ function uploads(uploaded, multiple) {
         uploads = multiple ? uploaded : [uploaded]
     }
     return uploads.map((upload) => {
-        return upload.preview
+        return checkFileType(upload) ? upload.preview : ''
     })
+}
+
+export function checkFileType(upload) {
+    const types_allowed = ['jpg', 'jpeg', 'png', 'svg']
+    let allowed = false
+
+    for (var type of types_allowed) {
+        if (upload.type.includes('image/' + type)) {
+            allowed = true
+        }
+    }
+    return allowed
 }
 
 export default ({Image, Container, defaults, uploaded, multiple}) => {
@@ -27,7 +39,11 @@ export default ({Image, Container, defaults, uploaded, multiple}) => {
 
     return (
         <ImageContainer>
-            {Boolean(images.length) && images.map((image, index) => <TheImage key={index} src={image}/>)}
+            {
+                Boolean(images.length) && images.map((image, index) => {
+                    return image ? <TheImage key={index} src={image}/> : ''
+                })
+            }
         </ImageContainer>
     )
 }
