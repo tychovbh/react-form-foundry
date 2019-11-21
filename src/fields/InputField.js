@@ -8,7 +8,7 @@ export default ({field, component, onChange, id, state, error}) => {
     let additionalProps = {}
 
     if (properties.type !== 'file' && properties.type !== 'radio') {
-        additionalProps.value = state
+        additionalProps.value = state || ''
     }
 
     if (properties.type === 'radio' && state === properties.value) {
