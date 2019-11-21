@@ -8,21 +8,11 @@ function uploads(uploaded, multiple) {
     if (uploaded && (uploaded.length || uploaded.preview)) {
         uploads = multiple ? uploaded : [uploaded]
     }
-    return uploads.map((upload) => {
-        return checkFileType(upload) ? upload.preview : null
+    return uploads
+        .filter(upload => upload.preview)
+        .map((upload) => {
+        return upload.preview
     })
-}
-
-export function checkFileType(upload) {
-    const types_allowed = ['jpg', 'jpeg', 'png', 'svg']
-    let allowed = false
-
-    for (var type of types_allowed) {
-        if (upload.type.includes('image/' + type)) {
-            allowed = true
-        }
-    }
-    return allowed
 }
 
 export default ({Image, Container, defaults, uploaded, multiple}) => {

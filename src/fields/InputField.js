@@ -28,7 +28,11 @@ export default ({field, component, onChange, id, state, error}) => {
                 onChange={(event) => {
                     if (properties.type === 'file') {
                         let file = event.target.files[0]
-                        file.preview = window.URL.createObjectURL(file)
+
+                        if (file.type.includes('image/')) {
+                            file.preview = window.URL.createObjectURL(file)
+                        }
+
                         return onChange(file, field.properties.multiple)
                     }
 
