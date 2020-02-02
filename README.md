@@ -1,6 +1,6 @@
 # react-form-foundry
 
-> React Form Generator
+> React Form Foundry
 
 [![NPM](https://img.shields.io/npm/v/react-form-foundry.svg)](https://www.npmjs.com/package/react-form-foundry) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 

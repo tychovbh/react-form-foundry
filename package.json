@@ -1,6 +1,6 @@
 {
   "name": "react-form-foundry",
-  "version": "1.1.9",
+  "version": "1.1.12",
   "description": "Generate forms from JSON in React",
   "author": "tychovbh",
   "license": "MIT",

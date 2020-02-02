@@ -158,7 +158,7 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                 form.fields.map((field, index) => {
                     const Field = Fields[field.element.name]
                     const properties = field.properties
-                    const id = `form-generator-field-${properties.name}`
+                    const id = properties.id || `form-generator-field-${properties.name}`
                     const error = errors && !!errors[properties.name]
 
                     return (
@@ -179,7 +179,10 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                                 onChange={(value, append = false) => {
                                     if (append) {
                                         let collection = model[properties.name] || []
-                                        collection.push(value)
+                                        // TODO fix the real problem why is the onChange listener being triggered twice?
+                                        if (!collection.includes(value)) {
+                                            collection.push(value)
+                                        }
                                         value = collection
                                     }
                                     setModel({...model, [properties.name]: value})
@@ -216,9 +219,9 @@ export const FormDescription = ({form, components}) => {
     return <Description>{form.description}</Description>
 }
 
-export const FormSubmit = ({components}) => {
+export const FormSubmit = ({components, value, onClick}) => {
     const Submit = component(components, 'submit') || DefaultInput
-    return <Submit type={'submit'} value={'Submit'}/>
+    return <Submit type={'submit'} value={value || 'Submit'} onClick={onClick}/>
 }
 
 const Form = (props) => {
