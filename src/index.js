@@ -14,8 +14,6 @@ const DefaultError = (props) => <p {...props}>{props.children}</p>
 
 const DefaultInput = (props) => <input {...props}/>
 
-
-
 const TextAreaField = ({field, component, onChange, id, state, error}) => {
     const Component = component || DefaultTextarea
 
@@ -47,7 +45,7 @@ const SelectField = ({field, component, onChange, id, state, error, request}) =>
     }, [])
 
     const label_key = properties.label_key || 'label'
-    const value_key = properties.label_key || 'value'
+    const value_key = properties.value_key || 'value'
 
     return <Component
         defaultValue={state}
