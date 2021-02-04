@@ -11,7 +11,7 @@ const DefaultTitle = (props) => <h3 {...props}>{props.children}</h3>
 const DefaultDescription = (props) => <h4 {...props}>{props.children}</h4>
 const DefaultSelect = (props) => <select {...props}/>
 const DefaultError = (props) => <p {...props}>{props.children}</p>
-
+const DefaultField = ({children}) => <div className={'form-generator-field'}>{children}</div>
 const DefaultInput = (props) => <input {...props}/>
 
 const TextAreaField = ({field, component, onChange, id, state, error}) => {
@@ -149,6 +149,7 @@ export const FormBuilder = (props) => {
 export const FormFields = ({form, components, model, setModel, defaults, errors, request}) => {
     const Label = component(components, 'label') || DefaultLabel
     const Error = component(components, 'error') || DefaultError
+    const FormField = components(components, 'field') || DefaultField
 
     return (
         <React.Fragment>
@@ -160,7 +161,7 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                     const error = errors && !!errors[properties.name]
 
                     return (
-                        <div className={'form-generator-field'} key={index}>
+                        <FormField key={index}>
                             {
                                 properties.label &&
                                 <Label error={error} htmlFor={id}>
@@ -199,7 +200,7 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                                     <Error key={index}>{error}</Error>,
                                 )
                             }
-                        </div>
+                        </FormField>
                     )
                 })
             }
