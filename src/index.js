@@ -52,6 +52,7 @@ const SelectField = ({field, component, onChange, id, state, error, request}) =>
         {...properties}
         error={error}
         id={id}
+        options={options}
         onChange={(event) => onChange(event.target.value)}
     >
         {Array.isArray(options) && options.map((option, index) => {
