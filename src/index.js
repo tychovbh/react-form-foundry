@@ -150,7 +150,7 @@ export const FormBuilder = (props) => {
 export const FormFields = ({form, components, model, setModel, defaults, errors, request}) => {
     const Label = component(components, 'label') || DefaultLabel
     const Error = component(components, 'error') || DefaultError
-    const FormField = components(components, 'field') || DefaultField
+    const FormField = component(components, 'field') || DefaultField
 
     return (
         <React.Fragment>
