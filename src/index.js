@@ -76,11 +76,26 @@ const Wysiwyg = ({state, field, onChange}) => {
     )
 }
 
+const Search = ({field, component, onChange, id, state, error}) => {
+    // TODO implement own search component
+    const Component = component
+    const properties = field.properties
+
+    return <Component
+        defaultValue={state}
+        {...properties}
+        error={error}
+        id={id}
+        onChange={(event) => onChange(event.target.value)}
+    />
+}
+
 const Fields = {
     input: InputField,
     textarea: TextAreaField,
     select: SelectField,
     wysiwyg: Wysiwyg,
+    search: Search
 }
 
 const fields = (form, defaults) => {
