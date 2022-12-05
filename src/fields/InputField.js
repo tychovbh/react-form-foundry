@@ -3,7 +3,7 @@ import {ImagePreview} from './index'
 
 const DefaultInput = (props) => <input {...props}/>
 
-export default ({field, component, onChange, id, state, error}) => {
+export default ({field, component, onChange, id, state, error, components, model, defaults}) => {
     const Component = component || DefaultInput
     const properties = field.properties
     let additionalProps = {}
