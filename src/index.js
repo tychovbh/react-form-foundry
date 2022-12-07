@@ -192,7 +192,6 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                                 request={request || {}}
                                 components={components}
                                 model={model}
-                                defaults={defaults}
                                 component={component(components, properties.type === 'file' ? 'input_file' : field.element.name)}
                                 onChange={(value, append = false) => {
                                     if (append) {
