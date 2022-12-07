@@ -11,8 +11,8 @@ function uploads(uploaded, multiple) {
     return uploads
         .filter(upload => upload.preview)
         .map((upload) => {
-        return upload.preview
-    })
+            return upload.preview
+        })
 }
 
 export default ({Image, Container, defaults, uploaded, multiple}) => {
