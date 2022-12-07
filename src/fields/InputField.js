@@ -1,5 +1,4 @@
 import React from 'react'
-import {ImagePreview} from './index'
 
 const DefaultInput = (props) => <input {...props}/>
 
@@ -42,16 +41,6 @@ export default ({field, component, onChange, id, state, error}) => {
                 className={`form-generator-input-${properties.type}`}
                 id={id}
             />
-
-            {
-                properties.type === 'file' &&
-                <ImagePreview
-                    multiple={field.properties.multiple}
-                    Image={component(components, 'image')}
-                    Container={component(components, 'image_container')}
-                    uploaded={model[properties.name]}
-                    defaults={defaults[properties.name]}/>
-            }
         </div>
 
     )

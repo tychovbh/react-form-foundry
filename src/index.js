@@ -190,8 +190,6 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                                 state={model[properties.name]}
                                 error={error}
                                 request={request || {}}
-                                components={components}
-                                model={model}
                                 component={component(components, properties.type === 'file' ? 'input_file' : field.element.name)}
                                 onChange={(value, append = false) => {
                                     if (append) {
@@ -203,8 +201,16 @@ export const FormFields = ({form, components, model, setModel, defaults, errors,
                                         value = collection
                                     }
                                     setModel({...model, [properties.name]: value})
-                                }}
-                            />
+                                }}/>
+                            {
+                                properties.type === 'file' &&
+                                <ImagePreview
+                                    multiple={field.properties.multiple}
+                                    Image={component(components, 'image')}
+                                    Container={component(components, 'image_container')}
+                                    uploaded={model[properties.name]}
+                                    defaults={defaults[properties.name]}/>
+                            }
                             {
                                 error && errors[properties.name].map((error, index) =>
                                     <Error key={index}>{error}</Error>,
